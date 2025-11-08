@@ -8,18 +8,25 @@
         <link href="style.css" rel="stylesheet">
     </head>
     <body>
-        <H1 class="oooh-baby-regular">Guessing Game</H1>
-        <p class="oooh-baby-regular" id="words">To play, simply enter a number and hit <b>GO!</b> for the game to start. You get 5 lives, and you have to try to guess what the number is!</p>
-        <div id="game">
-            <div id="numberline">
-                <span class="dot" id="enddot1"></span>
-                <span class="dot" id="enddot2"></span>
+        <header>
+            <a href="index.html" class="hlinks oooh-baby-regular">Home</a>
+            <a href="guess.html" class="hlinks oooh-baby-regular">Guessing Game</a>
+            <a href="dino.html" class="hlinks oooh-baby-regular">Dino Game</a>
+        </header>
+        <main>
+            <H1 class="oooh-baby-regular">Guessing Game</H1>
+            <p class="oooh-baby-regular" id="words">To play, simply enter a number and hit <b>GO!</b> for the game to start. You get 5 lives, and you have to try to guess what the number is!</p>
+            <div id="game">
+                <div id="numberline">
+                    <span class="dot" id="enddot1"></span>
+                    <span class="dot" id="enddot2"></span>
+                </div>
+                <input id="guess" type="number" placeholder="Enter Guess Here" min="1" max="100">
+                <button id="go" class="oooh-baby-regular">GO!</button>
+                <label id="response" class="oooh-baby-regular">Type a Number to get started!</label>
+                <label id="high-score" class="oooh-baby-regular">0</label>
             </div>
-            <input id="guess" type="number" placeholder="Enter Guess Here" min="1" max="100">
-            <button id="go" class="oooh-baby-regular">GO!</button>
-            <label id="response" class="oooh-baby-regular">Type a Number to get started!</label>
-            <label id="high-score" class="oooh-baby-regular">0</label>
-        </div>
+        </main>
         <script src="script.js"></script>
     </body>
 </html>
