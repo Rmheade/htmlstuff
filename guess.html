@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Number Guessing Game</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oooh+Baby&display=swap" rel="stylesheet">
+        <style>
+            .oooh-baby-regular {
+                font-family: "Oooh Baby", cursive;
+                font-weight: 400;
+                font-style: normal;
+            }
+            body{
+                background-color: #313647;
+            }
+            H1 {
+                color: #A3B087;
+                text-align: center;
+                font-size-adjust: .75;
+            }
+            #words {
+                color: #FFF8D4;
+                text-align: center;
+                font-size-adjust: .5;
+            }
+            #game{
+                border: #435663 outset;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            #guess{
+                width: 15%;
+                background-color: #313647;
+                color:#A3B087;
+                border: solid #435663;
+                text-align: center;
+            }
+            #go{
+                width: 5%;
+                margin:5px;
+                background-color: #313647;
+                color:#A3B087;
+                border: solid #435663;
+
+            }
+            input::-webkit-outer-spin-button,  /*Removes the up down arrows from label*/
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            #go:hover{
+                background-color:#435663;
+            }
+            #high-score{
+                color: #FFF8D4;
+                margin-top: 2px;
+                font-size-adjust: .5;
+                margin: 5px;
+            }
+            #response{
+                font-size-adjust: .5;
+                color: #FFF8D4;
+            }
+            #numberline{
+                border: #A3B087 solid 1px;
+                position: relative;
+                height: .01px;
+                width: 80%  ;
+                margin-top: 5%;
+                margin-bottom: 5%;
+            }
+            .dot {
+                height: 10px;
+                width: 10px;
+                border-radius: 50%;
+                display: inline-block;
+                margin: 0px;
+            }
+            #enddot1 {
+                position: absolute;
+                left: -1%;
+                top: -4.5px;
+                background-color: #A3B087;
+            }
+            #enddot2 {
+                position: absolute;
+                left: calc(100% - 5px);
+                top: -4.5px;
+                background-color: #A3B087;  
+            }
+            .numm {
+                position: absolute;
+                width: 10px;
+                display: inline-block;
+                margin: 0px;
+                color: #FFF8D4;
+            }
+        </style>
+    </head>
+    <body>
+        <H1 class="oooh-baby-regular">Guessing Game</H1>
+        <p class="oooh-baby-regular" id="words">To play, simply enter a number and hit <b>GO!</b> for the game to start. You get 5 lives, and you have to try to guess what the number is!</p>
+        <div id="game">
+            <div id="numberline">
+                <span class="dot" id="enddot1"></span>
+                <span class="dot" id="enddot2"></span>
+            </div>
+            <input id="guess" type="number" placeholder="Enter Guess Here" min="1" max="100">
+            <button id="go" class="oooh-baby-regular">GO!</button>
+            <label id="response" class="oooh-baby-regular">Type a Number to get started!</label>
+            <label id="high-score" class="oooh-baby-regular">0</label>
+        </div>
+        <script>
+            const guess = document.getElementById("guess");
+            const go = document.getElementById("go");
+            const score = document.getElementById("high-score");
+            const response = document.getElementById("response");
+            const dotsss = document.getElementsByClassName('dot');
+            const line = document.getElementById('numberline');
+            let rannum = 0
+            let highscore = 0
+            let userguess = 0
+            let clear_dot = 0
+            let stored_high_score = 0
+
+            const getRandomInteger = (min, max) => {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            };
+
+            const clearDot = () => {
+                for (let i = dotsss.length - 1; i >= 2; i--) {
+                    const elementToRemove = dotsss[i];
+                    elementToRemove.parentNode.removeChild(elementToRemove);
+                }
+                const nummm = document.getElementsByClassName('numm');
+                for (let i = nummm.length - 1; i >= 0; i--) {
+                    const elementToRemove = nummm[i];
+                    elementToRemove.parentNode.removeChild(elementToRemove);
+                }
+            }
+
+            const restart = () => {
+                rannum = getRandomInteger(1,100);
+                console.log("highscore: " + highscore + "; score.innerText: " + score.innerText)
+                if((highscore < stored_high_score) || stored_high_score == 0){
+                    score.innerText = "High Score: " + highscore;
+                    stored_high_score = highscore;
+                }
+                highscore = 0;
+                clear_dot = 1; //this is here instead of the function so that it only clears once you enter a new value
+            }
+
+            const placeNum = (value) => {
+                const numm = document.createElement('p');  // Create a new element each time
+                numm.className = 'numm oooh-baby-regular';
+                line.appendChild(numm);
+                numm.innerText = value;
+                if (value % 2 == 0){
+                    numm.style.top = '2px';
+                }else{
+                    numm.style.top = '-20px';
+                }
+                numm.style.left = "calc(" + (value*1.005) + "% - 15px)";
+                numm.style.font = "0.5em"
+            }
+
+            const placeDot = (value, comp) => { //value = guess, comp = acctual number
+                const line = document.getElementById('numberline');
+                const dott = document.createElement('span');
+                dott.className = 'dot';
+                line.appendChild(dott);
+                for (let i = 0; i < dotsss.length; i++) {
+                    dotsss[i].style.width = (line.clientWidth / 100) + "px";
+                    dotsss[i].style.height = (line.clientWidth / 100) + "px";
+                }
+                if(value > comp){
+                    dott.style.backgroundColor = "#DD8A6C";
+                }
+                else if(value < comp){
+                    dott.style.backgroundColor = "#A62700";
+                }else{
+                    dott.style.backgroundColor = "#EFBF04";
+                }
+                dott.style.position = "absolute";
+                dott.style.top = "-4.5px";
+                dott.style.left = "calc(" + (value*1.005) + "% - 10px)";
+            }
+
+            go.addEventListener("click", () => {
+                userguess = guess.value;
+                if (clear_dot == 1){
+                    clearDot();
+                    clear_dot = 0;
+                }
+                placeDot(userguess, rannum);
+                placeNum(userguess);
+                if (userguess == rannum){
+                    response.innerText = "You Got it!";
+                    guess.value = '';
+                    highscore ++;
+                    restart();
+                }else if(userguess < rannum){
+                    response.innerText = "Too Low! Try Again!"
+                    guess.value = '';
+                    highscore ++;
+                }else if(userguess > rannum){
+                    response.innerText = "Too High! Try Again!"
+                    guess.value = '';
+                    highscore ++;
+                }else{
+                    response.innerText = "You Entered an Invalid Sequence! Try Again!"
+                    guess.value = '';
+                }
+            });
+            
+            guess.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    go.click();      // Programmatically click the button
+                }
+            });
+
+            document.getElementById('response').addEventListener('keypress', function(event) {
+                const allowedChars = /[0-9]/; // Regular expression for allowed characters
+                const char = String.fromCharCode(event.charCode);
+
+                if (!allowedChars.test(char)) {
+                    event.preventDefault(); // Prevent the character from being entered
+                }
+            });
+            document.getElementById('guess').addEventListener('input', function(event) {
+                // Remove any non-digit characters
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            restart();
+        </script>
+    </body>
+</html>
